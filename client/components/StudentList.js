@@ -1,43 +1,53 @@
-import React from 'react';
-import {Link} from 'react-router-dom'
-
-const DUMMY_DATA = [
-  {
-    id: 1,
-    fullName: "Jordan Walke",
-    firstName: "Jordan",
-    lastName: "Walke",
-    email: "jw@react.com",
-  },
-  {
-    id: 2,
-    fullName: "Dan Abramov",
-    firstName: "Dan",
-    lastName: "Avramov",
-    email: "da@react.com",
-  }
-]
+import React from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { fetchStudents } from "../redux/store";
 
 class StudentList extends React.Component {
   constructor(props) {
     super(props);
   }
+  componentDidMount() {
+    this.props.getStudents(); //
+  }
 
   render() {
     return (
       <ul>
-        {DUMMY_DATA.map((student) => (
+        {this.props.studentList.map((student) => (
           <li key={student.id}>
             <div>
-              <p>Name: {student.fullName}</p>
-              <p>Email: {student.email}</p>
+              <p>
+                Name: {student.fullName}
+                <Link> View Detail </Link>
+              </p>
+              <p>
+                Email: {student.email}
+                <Link>View Detail</Link>
+              </p>
             </div>
           </li>
         ))}
       </ul>
-    )
-
+    );
   }
 }
 
-export default StudentList;
+const mapStateToProps = (state) => {
+  return {
+    studentList: state.students,
+  };
+};
+
+const mapDisptachToProps = (dispatch) => {
+  return {
+    getStudents: () => dispatch(fetchStudents()),
+  };
+};
+
+const studentListConnector = connect(
+  mapStateToProps,
+  mapDisptachToProps
+)(StudentList);
+
+export default studentListConnector;
